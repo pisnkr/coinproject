@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div id="layoutSidenav_content">
+
+<main>
+    <meta charset="utf-8"/>
+    <title>Chat Rooms</title>
+    
+
+<tbody>
+    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
+    <input id="chat-message-input" type="text" size="100"><br>
+    <input id="chat-message-submit" type="button" value="Send">
+    {{ room_name|json_script:"room-name" }}   
+</tbody>
+    <script>
+        const roomNameEncoded = encodeURIComponent(JSON.parse(document.getElementById('room-name').textContent));
+
+        const webSocketUrl = `ws://${window.location.host}/ws/chat/${roomNameEncoded}/`.replace(/%20/g, '+');
+
+        const chatSocket = new WebSocket(webSocketUrl);
+
+        // Scroll to the bottom of the chat log
+        function scrollToBottom() {
+            const chatLogElement = document.querySelector('#chat-log');
+            chatLogElement.scrollTop = chatLogElement.scrollHeight;
+        }
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const chatLogElement = document.querySelector('#chat-log');
+            chatLogElement.value += (data.message + '\n');
+            scrollToBottom(); // Scroll to the bottom when a new message is received
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeydown = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+            scrollToBottom(); // Scroll to the bottom after sending a message
+        };
+    </script>
+</main>
+
+{% endblock %}

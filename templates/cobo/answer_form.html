@@ -1,0 +1,26 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<!-- 답변 수정-->
+<div id="layoutSidenav_content">
+<div class="container my-3">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% include "form_errors.html" %}
+        <div class="mb-3">
+            <label for="content" class="form-label">답변내용</label>
+            <textarea class="form-control" name="content" id="content"
+                      rows="10">{{ form.content.value|default_if_none:'' }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="image" class="form-label">이미지 업로드</label>
+            <input type="file" class="form-control" name="image" id="image">
+            {% if answer.image %}
+                <img src="{{ answer.image.url }}" alt="Answer Image" class="img-fluid mt-2">
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">저장하기</button>
+    </form>
+</div>
+{% endblock %}
+

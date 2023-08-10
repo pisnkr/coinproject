@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <h1>Create Chat Room</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const roomNameInput = document.querySelector('#id_room_name');  // 채팅방 이름 입력 필드
+
+        form.addEventListener('submit', function(event) {
+          event.preventDefault();
+
+          // 채팅방 이름을 URL 인코딩하여 생성
+          const roomNameKorean = roomNameInput.value;
+          const roomNameEncoded = encodeURIComponent(roomNameKorean);
+          
+          // 웹 소켓 연결 URL 생성
+          const webSocketUrl = `ws://127.0.0.1:8000/ws/chat/${roomNameEncoded}/`.replace(/%20/g, '+');
+
+          // 웹소켓 연결 로직 등을 구현
+          // ...
+        });
+      });
+    </script>
+
+    <button type="submit">Create</button>
+  </form>
+{% endblock %}

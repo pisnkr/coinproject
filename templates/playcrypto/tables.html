@@ -1,0 +1,41 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+        <div id="layoutSidenav_content">
+            <main>
+                <style>
+                    #tradingview-widget-container {
+                        width: 100%;
+                        height: 100vh; /* 화면 높이의 100%로 설정 */
+                    }
+                </style>
+                <div id="tradingview-widget-container"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                    <script type="text/javascript">
+                    new TradingView.widget({
+                        "drawings_access" : {
+                                type: 'black',
+                                tools: [
+                                    {
+                                        name: 'Trend Line',
+                                        grayed: true
+                                    },
+                                ]
+                            },
+                        "width": "100%",
+                        "height": "100%",
+                        "symbol": "BTCUSD",  // 원하는 코인 심볼
+                        "interval": "D",     // 차트의 기간 (D: 일봉, W: 주봉, M: 월봉 등)
+                        "timezone": "Etc/UTC",
+                        "theme": "dark",
+                        "style": "1",
+                        "locale": "kr",
+                        "toolbar_bg": "#F1F3F6",
+                        "enable_publishing": false,
+                        "allow_symbol_change": true,
+                        "container_id": "tradingview-widget-container",
+                        });
+                    </script>
+            </main>
+{% endblock %}

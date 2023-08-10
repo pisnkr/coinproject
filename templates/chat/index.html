@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div id="layoutSidenav_content">
+
+<main>
+    <meta charset="utf-8"/>
+    <title>Chat Rooms</title>
+    <tbody>
+        <h1>What chat room would you like to enter?</h1>
+        <form method="post" action="{% url 'chat:create_chat_room' %}">
+            {% csrf_token %}
+            <input type="text" name="room_name" placeholder="Enter Room Name">
+            <button type="submit">Create Room</button>
+        </form>
+        <h2>Chat Rooms</h2>
+        <ul>
+            {% for chat_room in chat_rooms %}
+                {% if chat_room.name %}
+                    <li><a href="{% url 'chat:room' chat_room.name %}">{{ chat_room.name }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </tbody>
+</main>
+{% endblock %}
+
+
